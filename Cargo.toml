@@ -1,7 +1,7 @@
 [package]
 name = "ndarray-npz"
-version = "0.1.0"
-rust-version = "1.60"
+version = "0.2.0"
+rust-version = "1.73.0"
 edition = "2021"
 authors = ["Rouven Spreckels <rs@qu1x.dev>"]
 description = "Advanced .npz file format support for n-dimensional arrays."
@@ -37,12 +37,12 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 ndarray = "0.15.6"
 ndarray-npy = { version = "0.8.1", default-features = false }
-zip = { version = "0.6.4", default-features = false }
-crc32fast = "1.3.2"
+zip = { version = "2.1.2", default-features = false }
+crc32fast = "1.4.2"
 
 [dev-dependencies]
-aligned-vec = "0.5"
-memmap2 = "0.5.10"
+aligned-vec = "0.6"
+memmap2 = "0.9.4"
 
 [features]
 default = ["compressed", "num-complex-0_4"]

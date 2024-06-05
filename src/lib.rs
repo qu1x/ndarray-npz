@@ -56,7 +56,7 @@ use std::{
 };
 use zip::{
 	result::ZipError,
-	write::FileOptions,
+	write::SimpleFileOptions,
 	{CompressionMethod, ZipArchive, ZipWriter},
 };
 
@@ -130,8 +130,7 @@ impl From<WriteNpyError> for WriteNpzError {
 /// ```
 pub struct NpzWriter<W: Write + Seek> {
 	zip: ZipWriter<W>,
-	options: FileOptions,
-	align: u16,
+	options: SimpleFileOptions,
 }
 
 impl<W: Write + Seek> NpzWriter<W> {
@@ -144,8 +143,9 @@ impl<W: Write + Seek> NpzWriter<W> {
 	pub fn new(writer: W) -> NpzWriter<W> {
 		NpzWriter {
 			zip: ZipWriter::new(writer),
-			options: FileOptions::default().compression_method(CompressionMethod::Stored),
-			align: 64,
+			options: SimpleFileOptions::default()
+				.with_alignment(64)
+				.compression_method(CompressionMethod::Stored),
 		}
 	}
 
@@ -157,8 +157,7 @@ impl<W: Write + Seek> NpzWriter<W> {
 	pub fn new_compressed(writer: W) -> NpzWriter<W> {
 		NpzWriter {
 			zip: ZipWriter::new(writer),
-			options: FileOptions::default().compression_method(CompressionMethod::Deflated),
-			align: 1,
+			options: SimpleFileOptions::default().compression_method(CompressionMethod::Deflated),
 		}
 	}
 
@@ -181,8 +180,7 @@ impl<W: Write + Seek> NpzWriter<W> {
 		S: Data,
 		D: Dimension,
 	{
-		self.zip
-			.start_file_aligned(name, self.options, self.align)?;
+		self.zip.start_file(name.into(), self.options)?;
 		array.write_npy(BufWriter::new(&mut self.zip))?;
 		Ok(())
 	}
@@ -200,7 +198,7 @@ impl<W: Write + Seek> NpzWriter<W> {
 	/// # Errors
 	///
 	/// Finishing the zip archive can fail with [`ZipError`].
-	pub fn finish(mut self) -> Result<W, WriteNpzError> {
+	pub fn finish(self) -> Result<W, WriteNpzError> {
 		let mut writer = self.zip.finish()?;
 		writer.flush().map_err(ZipError::from)?;
 		Ok(writer)
@@ -570,11 +568,11 @@ impl<'a> NpzView<'a> {
 	/// [`ZipError::FileNotFound`] if the `name` is not found.
 	pub fn by_name(&self, name: &str) -> Result<NpyView<'a>, ViewNpzError> {
 		self.by_index(self.names.get(name).copied().ok_or_else(|| {
-			if self.directory_names.get(name).is_some() {
+			if self.directory_names.contains(name) {
 				ViewNpzError::Directory
-			} else if self.compressed_names.get(name).is_some() {
+			} else if self.compressed_names.contains(name) {
 				ViewNpzError::CompressedFile
-			} else if self.encrypted_names.get(name).is_some() {
+			} else if self.encrypted_names.contains(name) {
 				ViewNpzError::EncryptedFile
 			} else {
 				ZipError::FileNotFound.into()
@@ -924,11 +922,11 @@ impl<'a> NpzViewMut<'a> {
 	/// [`ZipError::FileNotFound`] if the `name` is not found.
 	pub fn by_name(&mut self, name: &str) -> Result<NpyViewMut<'a>, ViewNpzError> {
 		self.by_index(self.names.get(name).copied().ok_or_else(|| {
-			if self.directory_names.get(name).is_some() {
+			if self.directory_names.contains(name) {
 				ViewNpzError::Directory
-			} else if self.compressed_names.get(name).is_some() {
+			} else if self.compressed_names.contains(name) {
 				ViewNpzError::CompressedFile
-			} else if self.encrypted_names.get(name).is_some() {
+			} else if self.encrypted_names.contains(name) {
 				ViewNpzError::EncryptedFile
 			} else {
 				ZipError::FileNotFound.into()
