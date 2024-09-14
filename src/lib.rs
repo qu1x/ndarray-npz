@@ -163,8 +163,7 @@ impl<W: Write + Seek> NpzWriter<W> {
 
 	/// Adds an array with the specified `name` to the `.npz` file.
 	///
-	/// To write a scalar value, create a zero-dimensional array using [`arr0`](ndarray::arr0) or
-	/// [`aview0`](ndarray::aview0).
+	/// To write a scalar value, create a zero-dimensional array using [`arr0`] or [`aview0`].
 	///
 	/// # Errors
 	///
@@ -190,10 +189,9 @@ impl<W: Write + Seek> NpzWriter<W> {
 	///
 	/// This finishes writing the remaining zip structures and flushes the
 	/// writer. While dropping will automatically attempt to finish the zip
-	/// file and (for writers that flush on drop, such as
-	/// [`BufWriter`](std::io::BufWriter)) flush the writer, any errors that
-	/// occur during drop will be silently ignored. So, it's necessary to call
-	/// `.finish()` to properly handle errors.
+	/// file and (for writers that flush on drop, such as [`BufWriter`]) flush
+	/// the writer, any errors that occur during drop will be silently ignored.
+	/// So, it's necessary to call `.finish()` to properly handle errors.
 	///
 	/// # Errors
 	///
