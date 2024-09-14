@@ -10,90 +10,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+    - name: msrv
+      run: |
+        msrv=$(cargo metadata --no-deps --format-version 1 |
+          jq --raw-output '.packages[] | select(.name=="ndarray-npz") | .rust_version')
+        echo "MSRV=$msrv" >> $GITHUB_ENV
     - name: toolchain
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@master
       with:
-        toolchain: 1.60.0
-        profile: minimal
+        toolchain: ${{ env.MSRV }}
         components: rustfmt, rust-docs, clippy
-        override: true
     - name: test
-      uses: actions-rs/cargo@v1
-      with:
-        command: test
+      run: cargo test
     - name: test-no_default_features
-      uses: actions-rs/cargo@v1
-      with:
-        command: test
-        args: --no-default-features
+      run: cargo test --no-default-features
     - name: clippy
-      uses: actions-rs/cargo@v1
-      with:
-        command: clippy
-        args: --tests -- --deny clippy::pedantic
+      run: cargo clippy --tests -- --deny clippy::pedantic
     - name: doc
-      uses: actions-rs/cargo@v1
-      with:
-        command: doc
+      run: cargo doc
     - name: doc-no_default_features
-      uses: actions-rs/cargo@v1
-      with:
-        command: doc
-        args: --no-default-features
+      run: cargo doc --no-default-features
     - name: fmt
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --check
+      run: cargo fmt --check
   nightly:
     runs-on: ubuntu-latest
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: toolchain
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@master
       with:
         toolchain: nightly
-        profile: minimal
         components: rustfmt, rust-docs, clippy, miri
-        override: true
     - name: test
-      uses: actions-rs/cargo@v1
-      with:
-        command: test
+      run: cargo test
     - name: test-no_default_features
-      uses: actions-rs/cargo@v1
-      with:
-        command: test
-        args: --no-default-features
+      run: cargo test --no-default-features
     - name: clippy
-      uses: actions-rs/cargo@v1
-      with:
-        command: clippy
-        args: --tests -- --deny clippy::pedantic
+      run: cargo clippy --tests -- --deny clippy::pedantic
     - name: doc
-      uses: actions-rs/cargo@v1
-      with:
-        command: doc
+      run: cargo doc
       env:
         RUSTDOCFLAGS: "--cfg docsrs"
     - name: doc-no_default_features
-      uses: actions-rs/cargo@v1
-      with:
-        command: doc
-        args: --no-default-features
+      run: cargo doc --no-default-features
       env:
         RUSTDOCFLAGS: "--cfg docsrs"
     - name: fmt
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --check
+      run: cargo fmt --check
     - name: miri
-      uses: actions-rs/cargo@v1
-      with:
-        command: miri
-        args: test
+      run: cargo miri test
       env:
         MIRIFLAGS: -Zmiri-disable-isolation
