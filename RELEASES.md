@@ -1,3 +1,7 @@
+# Version 0.3.0 (2024-09-14)
+
+  * Bump dependencies.
+
 # Version 0.2.0 (2024-06-05)
 
   * Bump dependencies.
