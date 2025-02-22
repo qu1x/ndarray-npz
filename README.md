@@ -11,7 +11,7 @@
 [Documentation]: https://docs.rs/ndarray-npz/badge.svg
 [Downloads]: https://img.shields.io/crates/d/ndarray-npz.svg
 [Version]: https://img.shields.io/crates/v/ndarray-npz.svg
-[Rust]: https://img.shields.io/badge/rust-v1.73.0-brightgreen.svg
+[Rust]: https://img.shields.io/badge/rust-v1.85.0-brightgreen.svg
 [License]: https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blue.svg
 
 Advanced [`.npz`] file format support for [`ndarray`].
@@ -57,7 +57,7 @@ Both features are enabled by default.
 
 # License
 
-Copyright © 2021-2024 Rouven Spreckels <rs@qu1x.dev>
+Copyright © 2021-2025 Rouven Spreckels <rs@qu1x.dev>
 
 This project is licensed under either of
 

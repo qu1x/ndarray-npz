@@ -605,7 +605,7 @@ pub struct NpyView<'a> {
 	status: ChecksumStatus,
 }
 
-impl<'a> NpyView<'a> {
+impl NpyView<'_> {
 	/// CRC-32 checksum status.
 	#[must_use]
 	pub fn status(&self) -> ChecksumStatus {
@@ -966,7 +966,7 @@ pub struct NpyViewMut<'a> {
 	status: ChecksumStatus,
 }
 
-impl<'a> NpyViewMut<'a> {
+impl NpyViewMut<'_> {
 	/// CRC-32 checksum status.
 	#[must_use]
 	pub fn status(&self) -> ChecksumStatus {
@@ -1034,7 +1034,7 @@ impl<'a> NpyViewMut<'a> {
 	}
 }
 
-impl<'a> Drop for NpyViewMut<'a> {
+impl Drop for NpyViewMut<'_> {
 	fn drop(&mut self) {
 		if self.status == ChecksumStatus::Outdated {
 			self.update();
