@@ -806,7 +806,7 @@ impl<'a> NpzViewMut<'a> {
 					// Whether CRC-32 coincides with data descriptor signature.
 					if crc32 == central_crc32 {
 						return Err(ZipError::InvalidArchive(
-							"Ambiguous CRC-32 location in data descriptor",
+							"Ambiguous CRC-32 location in data descriptor".into(),
 						)
 						.into());
 					}
@@ -835,16 +835,16 @@ impl<'a> NpzViewMut<'a> {
 			// Split off leading bytes.
 			let mid = start
 				.checked_sub(offset)
-				.ok_or(ZipError::InvalidArchive("Overlapping ranges"))?;
+				.ok_or(ZipError::InvalidArchive("Overlapping ranges".into()))?;
 			if mid > bytes.len() {
-				return Err(ZipError::InvalidArchive("Offset exceeds EOF").into());
+				return Err(ZipError::InvalidArchive("Offset exceeds EOF".into()).into());
 			}
 			let (slice, remaining_bytes) = bytes.split_at_mut(mid);
 			offset += slice.len();
 			// Split off leading borrow of interest. Cannot underflow since `start < end`.
 			let mid = end - offset;
 			if mid > remaining_bytes.len() {
-				return Err(ZipError::InvalidArchive("Length exceeds EOF").into());
+				return Err(ZipError::InvalidArchive("Length exceeds EOF".into()).into());
 			}
 			let (slice, remaining_bytes) = remaining_bytes.split_at_mut(mid);
 			offset += slice.len();
@@ -855,7 +855,7 @@ impl<'a> NpzViewMut<'a> {
 		}
 		// Collect split borrows as file views.
 		for (&index, (data_range, crc32_range, central_crc32_range)) in &ranges {
-			let ambiguous_offset = || ZipError::InvalidArchive("Ambiguous offsets");
+			let ambiguous_offset = || ZipError::InvalidArchive("Ambiguous offsets".into());
 			let file = NpyViewMut {
 				data: slices
 					.remove(&data_range.start)
@@ -1090,7 +1090,7 @@ where
 			let end = range.end.try_into().ok()?.checked_add(index)?;
 			Some(start..end)
 		})
-		.ok_or(ZipError::InvalidArchive("Range overflow"))
+		.ok_or(ZipError::InvalidArchive("Range overflow".into()))
 }
 
 fn slice_at<T>(bytes: &[u8], index: T, range: Range<T>) -> Result<&[u8], ZipError>
@@ -1100,7 +1100,7 @@ where
 	let range = range_at(index, range)?;
 	bytes
 		.get(range)
-		.ok_or(ZipError::InvalidArchive("Range exceeds EOF"))
+		.ok_or(ZipError::InvalidArchive("Range exceeds EOF".into()))
 }
 
 #[must_use]
