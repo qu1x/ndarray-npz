@@ -1,6 +1,6 @@
 [package]
 name = "ndarray-npz"
-version = "0.4.0"
+version = "0.4.1"
 rust-version = "1.85.0"
 edition = "2024"
 authors = ["Rouven Spreckels <rs@qu1x.dev>"]
@@ -41,7 +41,7 @@ zip = { version = "2.5.0", default-features = false }
 crc32fast = "1.4.2"
 
 [dev-dependencies]
-aligned-vec = "0.6.1"
+aligned-vec = "0.6.4"
 memmap2 = "0.9.5"
 
 [features]

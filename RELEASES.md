@@ -1,3 +1,7 @@
+# Version 0.4.1 (2025-03-26)
+
+  * Fix SemVer violation of `zip`.
+
 # Version 0.4.0 (2025-02-22)
 
   * Rust Edition 2024.
