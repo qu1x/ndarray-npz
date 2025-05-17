@@ -60,6 +60,6 @@ jobs:
     - name: fmt
       run: cargo fmt --check
     - name: miri
-      run: cargo miri test
+      run: cargo miri test --tests
       env:
         MIRIFLAGS: -Zmiri-disable-isolation
