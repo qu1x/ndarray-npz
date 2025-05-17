@@ -37,7 +37,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 ndarray = "0.16.1"
 ndarray-npy = { version = "0.9.1", default-features = false }
-zip = { version = "2.5.0", default-features = false }
+zip = { version = "3.0.0", default-features = false }
 crc32fast = "1.4.2"
 
 [dev-dependencies]

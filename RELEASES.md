@@ -1,3 +1,7 @@
+# Version 0.4.2 (2025-05-17)
+
+  * Fix SemVer violation of `zip`.
+
 # Version 0.4.1 (2025-03-26)
 
   * Fix SemVer violation of `zip`.

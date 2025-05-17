@@ -1064,10 +1064,7 @@ fn crc32_verify(bytes: &[u8], crc32: [u8; 4]) -> Result<u32, ZipError> {
 	if crc32_update(bytes) == crc32 {
 		Ok(crc32)
 	} else {
-		Err(ZipError::Io(io::Error::new(
-			io::ErrorKind::Other,
-			"Invalid checksum",
-		)))
+		Err(ZipError::Io(io::Error::other("Invalid checksum")))
 	}
 }
 
